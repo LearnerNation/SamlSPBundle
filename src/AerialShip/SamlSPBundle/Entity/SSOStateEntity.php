@@ -31,13 +31,13 @@ abstract class SSOStateEntity extends SSOState
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=64, name="name_id")
+     * @ORM\Column(type="string", length=64, name="name_id", nullable=true)
      */
     protected $nameID;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=64, name="name_id_format")
+     * @ORM\Column(type="string", length=64, name="name_id_format", nullable=true)
      */
     protected $nameIDFormat;
 

@@ -122,8 +122,8 @@ class AssertionConsumer implements RelyingPartyInterface
     protected function createSSOState(ServiceInfo $serviceInfo, Assertion $assertion)
     {
         $ssoState = $this->ssoStore->create();
-        $ssoState->setNameID($assertion->getSubject()->getNameID()->getValue());
-        $ssoState->setNameIDFormat($assertion->getSubject()->getNameID()->getFormat() ?: '');
+        $ssoState->setNameID($assertion->getSubject()->getNameID()?$assertion->getSubject()->getNameID()->getValue():'');
+        $ssoState->setNameIDFormat($assertion->getSubject()->getNameID()?$assertion->getSubject()->getNameID()->getFormat() : '');
         $ssoState->setAuthenticationServiceName($serviceInfo->getAuthenticationService());
         $ssoState->setProviderID($serviceInfo->getProviderID());
         $ssoState->setSessionIndex($assertion->getAuthnStatement()->getSessionIndex());
