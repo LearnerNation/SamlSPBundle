@@ -76,7 +76,7 @@ class LogoutReceiveRequest extends LogoutBase implements RelyingPartyInterface
         $this->deleteSSOState($arrStates);
 
         $logoutResponse = new LogoutResponse();
-        $logoutResponse->setID(Helper::generateID());
+	    $logoutResponse->setID(Helper::generateID());
         $logoutResponse->setIssuer($serviceInfo->getSpProvider()->getEntityDescriptor()->getEntityID());
         $logoutResponse->setInResponseTo($logoutRequest->getID());
 
