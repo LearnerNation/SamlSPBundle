@@ -67,14 +67,14 @@ class SSOSessionCheck implements RelyingPartyInterface
         /** @var SamlSpToken $token */
         $token = $this->securityContext->getToken();
         $samlSpInfo = $token->getSamlSpInfo();
-
+        $nameIDValue = $samlSpInfo->getNameID() ? $samlSpInfo->getNameID()->getValue() : '';
         $ssoState = $this->ssoStore->getOneByNameIDSessionIndex(
             $token->getProviderKey(),
             $samlSpInfo->getAuthenticationServiceID(),
-            $samlSpInfo->getNameID()->getValue(),
+            $nameIDValue,
             $samlSpInfo->getAuthnStatement()->getSessionIndex()
         );
-        if ($ssoState == null || $ssoState->getNameID() != $samlSpInfo->getNameID()->getValue()) {
+        if ($ssoState == null || $ssoState->getNameID() != $nameIDValue) {
             $this->securityContext->setToken(new AnonymousToken($this->providerKey, 'anon.'));
             $ex = new SSOSessionException('SSO session has expired');
             $ex->setToken($token);
