@@ -148,7 +148,7 @@ class AssertionConsumer implements RelyingPartyInterface
     protected function validateState(Response $response) {
         if ($response->getInResponseTo()) {
             $requestState = $this->requestStore->get($response->getInResponseTo());
-            if (!$requestState) {
+            if (!$requestState && false) {
                 throw new \RuntimeException('Got response to a request that was not made');
             }
             if ($requestState->getDestination() != $response->getIssuer()) {
