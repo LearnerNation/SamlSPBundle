@@ -83,7 +83,7 @@ class AssertionConsumer implements RelyingPartyInterface
 
         $event = new SamlValidationEvent($response->getInResponseTo());
         $dispatcher = $this->container->get('event_dispatcher');
-        $dispatcher->dispatch('saml.valdiation.event',$event);
+        $dispatcher->dispatch('saml.validation.event',$event);
 
         $this->validateResponse($serviceInfo, $response);
 
