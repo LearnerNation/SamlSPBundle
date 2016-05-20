@@ -9,11 +9,14 @@ use AerialShip\LightSaml\Model\XmlDSig\SignatureXmlValidator;
 use AerialShip\LightSaml\Security\KeyHelper;
 use AerialShip\SamlSPBundle\Config\ServiceInfo;
 use AerialShip\SamlSPBundle\Config\ServiceInfoCollection;
+use AerialShip\SamlSPBundle\Event\SamlValidationEvent;
+use AerialShip\SamlSPBundle\Event\ValidationEvent;
 use AerialShip\SamlSPBundle\RelyingParty\RelyingPartyInterface;
 use AerialShip\SamlSPBundle\State\Request\RequestStateStoreInterface;
 use AerialShip\SamlSPBundle\State\SSO\SSOStateStoreInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 class AssertionConsumer implements RelyingPartyInterface
@@ -30,18 +33,22 @@ class AssertionConsumer implements RelyingPartyInterface
     /** @var SSOStateStoreInterface  */
     protected $ssoStore;
 
-
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
 
     public function __construct(BindingManager $bindingManager,
         ServiceInfoCollection $serviceInfoCollection,
         RequestStateStoreInterface $requestStore,
-        SSOStateStoreInterface $ssoStore
+        SSOStateStoreInterface $ssoStore, ContainerInterface $container
     ) {
         $this->bindingManager = $bindingManager;
         $this->serviceInfoCollection = $serviceInfoCollection;
         $this->requestStore = $requestStore;
         $this->ssoStore = $ssoStore;
+        $this->container = $container;
     }
 
 
@@ -73,6 +80,11 @@ class AssertionConsumer implements RelyingPartyInterface
         $serviceInfo = $this->serviceInfoCollection->findByIDPEntityID($response->getIssuer());
 
         $serviceInfo->getSpProvider()->setRequest($request);
+
+        $event = new SamlValidationEvent($response->getInResponseTo());
+        $dispatcher = $this->container->get('event_dispatcher');
+        $dispatcher->dispatch('saml.valdiation.event',$event);
+
         $this->validateResponse($serviceInfo, $response);
 
         $assertion = $this->getSingleAssertion($response);

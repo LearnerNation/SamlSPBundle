@@ -1,5 +1,6 @@
 
 parameters:
+
     # Meta Providers ----------------------------------------
     aerial_ship_saml_sp.service_info_collection.class: AerialShip\SamlSPBundle\Config\ServiceInfoCollection
     aerial_ship_saml_sp.service_info.class: AerialShip\SamlSPBundle\Config\ServiceInfo
@@ -115,6 +116,7 @@ services:
             - @aerial_ship_saml_sp.service_info_collection
             - @aerial_ship_saml_sp.state.store.request
             - @aerial_ship_saml_sp.state.store.sso
+            - @service_container
         public: false
         abstract: true
 
